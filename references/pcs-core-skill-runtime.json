@@ -226,7 +226,7 @@
   ],
   "checksums": {
     "VERSION": "26523d06ddb20f6df1c11d1c4fbacdff5ed1106e6ff619d8711c7cff8e8540c5",
-    "PROJECT_STATUS.md": "d23b36d7788a99f83810afa5ae7968c2323ae00d526cd636d90b3e933e804328",
+    "PROJECT_STATUS.md": "d05ecce4a880a302517f094450d49e178497bce43b1ecfd9551dcf446b2bcb2b",
     "00_PCS_Index.md": "67be510a1a1958371d31e51ab70cb2601c2e8cf2cf45d4825450dec84bdf1497",
     "99_SCHEMAS/PCS_Version_Metadata.json": "c4c8882d8b89a595a3b2d7f2f31e77b3fadf9a653b96412d1b628a5d3f9bc61c",
     "99_SCHEMAS/PCS_Release_Status.json": "ac67c0b3c84efca5b82e03de0d324f3a0f7b8bde0d9abee063c5a6e7ab907a7b",
