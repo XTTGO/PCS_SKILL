@@ -4,7 +4,7 @@
   "core_version": "0.4.0-alpha.1",
   "core_export_version": "0.2.3",
   "core_export_profile": "skill-runtime",
-  "build_timestamp_utc": "2026-07-13T04:37:34.339658+00:00",
+  "build_timestamp_utc": "2026-07-13T05:32:22.722402+00:00",
   "source_policy": "configured_skill_runtime_profile_only",
   "supported_task_types": [
     "text_to_image",
@@ -24,7 +24,7 @@
     {
       "path": "SKILL.md",
       "source": "skills/pcs-skill/SKILL.md",
-      "sha256": "b5d7cdd9fbfd7e7b9f60ddf65e07facb794f3d650204ca11544a8200321d4b52"
+      "sha256": "38379096553b35788b77626c47da3169ed0e3d6f2b2111c78e7dc869727817d3"
     },
     {
       "path": "references/pcs-core-skill-runtime.json",
@@ -49,7 +49,7 @@
     {
       "path": "tools/pcs_user_entry_compile.py",
       "source": "tools/pcs_user_entry_compile.py",
-      "sha256": "f3375a2cea20ae577957efc15f58fcf2a389aba8b653b8620c15eb93a70f4aac"
+      "sha256": "748e072d75c760e5af8b2ab167f34e047a35b30a90a7454767e7b2ca5df15e66"
     }
   ],
   "ignored_runtime_paths": [
