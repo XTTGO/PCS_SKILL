@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fast structural and behavior check for the PCS natural-language entry skill."""
+"""Fast deterministic compiler check for the Host LLM PCS Skill package."""
 from __future__ import annotations
 
 import sys
@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from pcs_user_entry_compile import compile_user_entry  # noqa: E402
+from pcs_prompt_compile import compile_request  # noqa: E402
 
 
 REQUIRED_SKILL_TEXT = (
@@ -19,7 +19,8 @@ REQUIRED_SKILL_TEXT = (
     "character_consistency_edit",
     "video_generation",
     "image_to_video",
-    "pcs_user_entry_compile.py",
+    "Host LLM",
+    "pcs_prompt_compile.py",
 )
 
 
@@ -34,17 +35,31 @@ def main() -> int:
     if missing:
         print(f"Skill is missing required references: {missing}")
         return 1
-    result = compile_user_entry(
-        "Create a cinematic image of a glass astronaut walking through a quiet greenhouse at dawn.",
-        target_model="generic",
+    result = compile_request(
+        {
+            "metadata": {
+                "task_type": "text_to_image",
+                "target_model": "generic",
+                "output_mode": "Standard",
+                "prompt_density": "standard",
+                "language_target": "English",
+            },
+            "fields": {
+                "A3_identity_or_category": {"value": "glass astronaut", "source": "smoke_test", "state": "ADAPT", "priority": "P0"},
+                "A6_pose_or_action": {"value": "walking through a greenhouse", "source": "smoke_test", "state": "ADAPT", "priority": "P0"},
+                "I1_time_of_day": {"value": "dawn", "source": "smoke_test", "state": "ADAPT", "priority": "P1"},
+                "H1_rendering_style": {"value": "cinematic", "source": "smoke_test", "state": "ADAPT", "priority": "P1"},
+            },
+            "compile_options": {"include_debug_segments": False, "include_adapter_notes": False},
+        }
     )
-    if result.get("task_type") != "text_to_image" or not result.get("model_prompt"):
-        print("Natural-language entry smoke compilation failed")
+    if result.get("compile_metadata", {}).get("task_type") != "text_to_image" or not result.get("model_prompt"):
+        print("Compiler smoke validation failed")
         return 1
-    if "debug_segments" in result:
-        print("Default user result exposed debug segments")
+    if result.get("debug_segments"):
+        print("Compiler smoke validation exposed debug segments")
         return 1
-    print("PCS user entry skill quick validation OK")
+    print("PCS Host LLM skill quick validation OK")
     return 0
 
 

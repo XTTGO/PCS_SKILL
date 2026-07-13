@@ -1,20 +1,26 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 import unittest
 from pathlib import Path
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = PACKAGE_ROOT / 'tools' / 'pcs_user_entry_compile.py'
 RUNTIME_EXPORT = PACKAGE_ROOT / 'references' / 'pcs-core-skill-runtime.json'
+sys.path.insert(0, str(PACKAGE_ROOT / 'tools'))
+from pcs_prompt_compile import compile_request  # noqa: E402
 
 class PublishedSkillPackageTests(unittest.TestCase):
-    def run_entry(self, prompt: str, *args: str) -> dict[str, object]:
-        completed = subprocess.run([sys.executable, str(SCRIPT), prompt, *args], cwd=PACKAGE_ROOT, capture_output=True, text=True, check=False)
-        self.assertEqual(completed.returncode, 0, completed.stderr)
-        return json.loads(completed.stdout)
+    def compile_smoke_request(self) -> dict[str, object]:
+        return compile_request({
+            'metadata': {'task_type': 'text_to_image', 'target_model': 'generic', 'output_mode': 'Standard', 'prompt_density': 'standard', 'language_target': 'English'},
+            'fields': {
+                'A3_identity_or_category': {'value': 'glass astronaut', 'source': 'package_test', 'state': 'ADAPT', 'priority': 'P0'},
+                'A6_pose_or_action': {'value': 'walking through a greenhouse', 'source': 'package_test', 'state': 'ADAPT', 'priority': 'P0'},
+                'H1_rendering_style': {'value': 'cinematic', 'source': 'package_test', 'state': 'ADAPT', 'priority': 'P1'},
+            },
+            'compile_options': {'include_debug_segments': False, 'include_adapter_notes': False},
+        })
 
     def test_runtime_export_is_the_only_core_reference(self) -> None:
         self.assertTrue(RUNTIME_EXPORT.exists(), 'Runtime Core export is missing')
@@ -22,15 +28,25 @@ class PublishedSkillPackageTests(unittest.TestCase):
         for forbidden_directory in ('07_OUTPUT_TEMPLATE', '08_MODEL_ADAPTER', '10_AESTHETICS', '99_SCHEMAS', '99_GENERATED'):
             self.assertFalse((PACKAGE_ROOT / forbidden_directory).exists())
 
-    def test_text_to_image_runs_from_runtime_export(self) -> None:
-        result = self.run_entry('Create a cinematic image of a glass astronaut walking through a quiet greenhouse at dawn.')
-        self.assertEqual(result['task_type'], 'text_to_image')
-        self.assertEqual(result['prompt_density'], 'standard')
+    def test_host_llm_skill_compiles_a_canonical_request(self) -> None:
+        self.assertFalse((PACKAGE_ROOT / 'tools' / 'pcs_user_entry_compile.py').exists())
+        result = self.compile_smoke_request()
+        self.assertEqual(result['compile_metadata']['task_type'], 'text_to_image')
         self.assertTrue(result['model_prompt'])
-        self.assertNotIn('debug_segments', result)
+        self.assertEqual(result['debug_segments'], [])
 
     def test_product_negative_constraints_are_not_duplicated(self) -> None:
-        result = self.run_entry('Integrate the matte black perfume bottle from reference image 1 into a marble bathroom ad scene. Preserve the bottle silhouette and logo, match reflections and contact shadow.', '--target-model', 'comfyui_sd', '--prompt-density', 'high_density')
+        result = compile_request({
+            'metadata': {'task_type': 'product_integration', 'target_model': 'comfyui_sd', 'output_mode': 'Standard', 'prompt_density': 'high_density', 'language_target': 'English'},
+            'fields': {
+                'X1_edit_task_type': {'value': 'product integration', 'source': 'package_test', 'state': 'ADAPT', 'priority': 'P0'},
+                'X2_source_asset': {'value': 'matte black perfume bottle', 'source': 'source_image_1', 'state': 'LOCK', 'priority': 'P0'},
+                'X3_target_context': {'value': 'marble bathroom ad scene', 'source': 'target_image_2', 'state': 'ADAPT', 'priority': 'P0'},
+                'X5_preservation_level': {'value': 'bottle silhouette and logo', 'source': 'source_image_1', 'state': 'LOCK', 'priority': 'P0'},
+                'Y8_negative_constraints': {'value': 'distorted logo, altered product silhouette', 'source': 'package_test', 'state': 'ADAPT', 'priority': 'P0'},
+            },
+            'compile_options': {'include_debug_segments': False, 'include_adapter_notes': False},
+        })
         negatives = [item.strip().lower() for item in result['negative_prompt'].split(',') if item.strip()]
         self.assertEqual(negatives.count('distorted logo'), 1)
         self.assertEqual(negatives.count('altered product silhouette'), 1)
