@@ -56,31 +56,25 @@ def field_unit(
 def recognize_task_type(text: str) -> str:
     """Recognize one supported task without adding a new routing taxonomy."""
     normalized = text.lower()
-    if re.search(r"\b(image[ -]?to[ -]?video|animate (?:the |a )?(?:source|reference) image|animate image)\b", normalized) or any(
-        term in text for term in ("以图生视频", "图生视频", "让参考图动起来", "让源图动起来", "图片转视频")
-    ):
+    if re.search(r"\b(image[ -]?to[ -]?video|animate (?:the |a )?(?:source|reference) image|animate image)\b", normalized):
         return "image_to_video"
     if re.search(r"\b(video|animation|cinematic shot|motion)\b", normalized) and re.search(
         r"\b(animate|generate|create|make|second|shot|motion|camera)\b", normalized
-    ) or any(term in text for term in ("生成视频", "制作视频", "视频生成", "生成一段视频", "生成动画", "运镜")) or ("视频" in text and any(term in text for term in ("生成", "制作", "创建"))):
+    ):
         return "video_generation"
     if re.search(r"\b(product|bottle|packaging|logo)\b", normalized) and re.search(
         r"\b(integrate|integration|place|put|composite|insert)\b", normalized
-    ) or "产品融合" in text or "产品植入" in text or ("参考图" in text and any(term in text for term in ("融合", "植入", "合成"))):
+    ):
         return "product_integration"
-    if re.search(r"\b(same character|character identity|face identity|consistent hairstyle|character consistency)\b", normalized) or any(
-        term in text for term in ("角色一致性", "人物一致性", "保持相同角色", "保持人物一致", "保持角色一致")
-    ):
+    if re.search(r"\b(same character|character identity|face identity|consistent hairstyle|character consistency)\b", normalized):
         return "character_consistency_edit"
-    if re.search(r"\b(subject transfer|transfer .*?(?:into|to)|move .*?(?:into|to))\b", normalized) or any(
-        term in text for term in ("主体迁移", "人物迁移", "主体转移", "人物转移", "角色迁移")
-    ):
+    if re.search(r"\b(subject transfer|transfer .*?(?:into|to)|move .*?(?:into|to))\b", normalized):
         return "subject_transfer"
-    if re.search(r"\b(reverse prompt|image inversion|analy[sz]e (?:the |this )?(?:reference )?image|extract .*?from (?:the )?(?:reference )?image)\b", normalized) or any(
-        term in text for term in ("反推提示词", "图像反推", "分析参考图", "解析参考图")
-    ):
+    if re.search(r"\b(reverse prompt|image inversion|analy[sz]e (?:the |this )?(?:reference )?image|extract .*?from (?:the )?(?:reference )?image)\b", normalized):
         return "image_inversion"
     return "text_to_image"
+
+
 def first_match(text: str, patterns: tuple[str, ...]) -> str:
     for pattern in patterns:
         match = re.search(pattern, text, flags=re.IGNORECASE)
@@ -94,17 +88,12 @@ def extract_subject(text: str, task_type: str) -> str:
         product = first_match(
             text,
             (
-                r"(?:将|把)(?:参考图(?:中的)?|源图(?:中的)?)?(.+?)(?:融合|植入|合成|放入|置入)(?:到|至|进|入)",
                 r"\b(?:integrate|place|put|insert)\s+(?:the\s+)?(.+?)\s+(?:from|into|in)\s+(?:reference|source)\s+image",
                 r"\b(?:integrate|place|put|insert)\s+(?:the\s+)?(.+?)\s+(?:into|in)\s+",
             ),
         )
         if product:
             return product
-    if task_type == "subject_transfer":
-        subject = first_match(text, (r"(?:将|把)(?:参考图(?:中的)?|源图(?:中的)?)?(.+?)(?:迁移|转移)(?:到|至)",))
-        if subject:
-            return subject
     if task_type == "character_consistency_edit":
         return "same character identity"
     return first_match(
@@ -119,29 +108,9 @@ def extract_subject(text: str, task_type: str) -> str:
 
 def extract_context(text: str, task_type: str) -> str:
     if task_type == "product_integration":
-        return first_match(
-            text,
-            (
-                r"(?:融合|植入|合成|放入|置入)(?:到|至|进|入)(.+?)(?=[，。,.]|$)",
-                r"\b(?:into|in)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",
-            ),
-        )
+        return first_match(text, (r"\b(?:into|in)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",))
     if task_type == "character_consistency_edit":
-        return first_match(
-            text,
-            (
-                r"(?:放到|放入|改到|改为|置于)(.+?)(?=[，。,.]|$)",
-                r"\b(?:to|into|in)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",
-            ),
-        )
-    if task_type == "subject_transfer":
-        return first_match(
-            text,
-            (
-                r"(?:迁移|转移)(?:到|至)(.+?)(?=[，。,.]|$)",
-                r"\b(?:to|into|in)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",
-            ),
-        )
+        return first_match(text, (r"\b(?:to|into|in)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",))
     return first_match(
         text,
         (
@@ -149,6 +118,8 @@ def extract_context(text: str, task_type: str) -> str:
             r"\b(?:in|through|on|at)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",
         ),
     )
+
+
 def extract_common_fields(text: str, task_type: str) -> dict[str, dict[str, Any]]:
     fields: dict[str, dict[str, Any]] = {}
 
@@ -160,8 +131,6 @@ def extract_common_fields(text: str, task_type: str) -> dict[str, dict[str, Any]
     context = extract_context(text, task_type)
     if subject:
         add("A3_identity_or_category", subject, "P0")
-    elif task_type == "text_to_image":
-        add("A3_identity_or_category", compact_text(text), "P0")
     if context:
         add("J1_environment_type", context, "P0")
 
@@ -310,7 +279,7 @@ def build_entry_request(
             "target_model": target_model or "generic",
             "output_mode": "Standard",
             "prompt_density": prompt_density or "standard",
-            "language_target": "bilingual",
+            "language_target": "English",
         },
         "fields": filter_fields(fields, task_type, rules),
         "compile_options": {

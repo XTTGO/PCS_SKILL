@@ -12,18 +12,17 @@ Read `references/pcs-core-skill-runtime.json` as the only PCS Core reference at 
 ## Procedure
 
 1. Identify one existing task type: `text_to_image`, `image_inversion`, `subject_transfer`, `product_integration`, `character_consistency_edit`, `video_generation`, or `image_to_video`.
-2. Treat Chinese as the primary request language. Accept English and mixed Chinese-English input. Do not reject a request or return an empty `model_prompt` merely because its language cannot be fully structured; the compiler preserves a text-to-image brief as a raw fallback.
-3. Resolve the target model from the request; otherwise use the `generic` adapter.
-4. Resolve density from an explicit request. Default to `standard`; ask only if the density choice is genuinely outcome-critical.
-5. Extract only non-empty, task-relevant field control units. Preserve explicit source, target, `LOCK`, and `P0` evidence. Do not create fields.
-6. Omit empty values, `IGNORE` controls, task-irrelevant groups, and semantic duplicates. Keep `LOCK` and `P0` wording before any length budget.
-7. Call the packaged compiler; never hand-join a final prompt:
+2. Resolve the target model from the request; otherwise use the `generic` adapter.
+3. Resolve density from an explicit request. Default to `standard`; ask only if the density choice is genuinely outcome-critical.
+4. Extract only non-empty, task-relevant field control units. Preserve explicit source, target, `LOCK`, and `P0` evidence. Do not create fields.
+5. Omit empty values, `IGNORE` controls, task-irrelevant groups, and semantic duplicates. Keep `LOCK` and `P0` wording before any length budget.
+6. Call the packaged compiler; never hand-join a final prompt:
 
 ```bash
 python tools/pcs_user_entry_compile.py "<natural-language visual request>" --target-model generic --prompt-density standard
 ```
 
-8. Return `task_type`, `prompt_density`, `model_prompt`, model-supported `negative_prompt`, and `warnings` by default. Show `compile_info` or debug segments only when requested.
+7. Return `task_type`, `prompt_density`, `model_prompt`, model-supported `negative_prompt`, and `warnings` by default. Show `compile_info` or debug segments only when requested.
 
 ## Blocking questions
 
