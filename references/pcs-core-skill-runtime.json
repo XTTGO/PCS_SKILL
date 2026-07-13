@@ -268,7 +268,7 @@
     "99_SCHEMAS/PCS_Aesthetic_Review_Report_Schema.json": "7d0850679ce236bfaa9c092d6bc2ee250da86cdc385fd73e002c4d02b848759c",
     "99_SCHEMAS/PCS_User_Entry_Compile_Request_Schema.json": "622dbee808a9ae2034c4747671e8896f2bec63b0318b620f7f9cc4b808a559d2",
     "99_SCHEMAS/PCS_User_Entry_Compile_Result_Schema.json": "c55e03a9817fc881a8b0abfeabc97fe8f628a820267c1799cbf60594fe980b9c",
-    "tools/pcs_user_entry_compile.py": "d44d31bc4d284b071803fb7cb64b4ae852beea8c78aba62e6577f4e450fc7de8",
+    "tools/pcs_user_entry_compile.py": "f3375a2cea20ae577957efc15f58fcf2a389aba8b653b8620c15eb93a70f4aac",
     "skills/pcs-skill/SKILL.md": "b5d7cdd9fbfd7e7b9f60ddf65e07facb794f3d650204ca11544a8200321d4b52",
     "09_TEST_CASES/07_COMPILER_TESTS/product_integration_focused_ads.input.json": "9bc2d81dc2861d93be606d3f95110ae1bad634a73e1551a0b70221665b876a58",
     "09_TEST_CASES/07_COMPILER_TESTS/product_integration_focused_ads.result.json": "fd9cb0ab52a02e6e51cd6d2916a313f23dddf45ea94e176b7f0f35f5acb9317c",

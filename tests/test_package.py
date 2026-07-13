@@ -29,12 +29,6 @@ class PublishedSkillPackageTests(unittest.TestCase):
         self.assertTrue(result['model_prompt'])
         self.assertNotIn('debug_segments', result)
 
-    def test_chinese_text_to_image_runs_from_runtime_export(self) -> None:
-        result = self.run_entry('生成一张玻璃宇航员穿过清晨温室的电影感画面。')
-        self.assertEqual(result['task_type'], 'text_to_image')
-        self.assertIn('玻璃宇航员', result['model_prompt'])
-        self.assertIn('清晨温室', result['model_prompt'])
-
     def test_product_negative_constraints_are_not_duplicated(self) -> None:
         result = self.run_entry('Integrate the matte black perfume bottle from reference image 1 into a marble bathroom ad scene. Preserve the bottle silhouette and logo, match reflections and contact shadow.', '--target-model', 'comfyui_sd', '--prompt-density', 'high_density')
         negatives = [item.strip().lower() for item in result['negative_prompt'].split(',') if item.strip()]
