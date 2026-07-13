@@ -1,9 +1,9 @@
 ---
-name: pcs-user-entry-compiler
+name: pcs-skill
 description: Use when a user gives a natural-language visual brief or reference-image description and needs a PCS task classification plus a model-ready prompt without manually authoring PCS JSON.
 ---
 
-# PCS User Entry Compiler
+# PCS Skill
 
 ## Runtime reference
 

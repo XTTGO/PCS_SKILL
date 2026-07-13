@@ -25,7 +25,7 @@ REQUIRED_SKILL_TEXT = (
 
 def main() -> int:
     package_skill = ROOT / "SKILL.md"
-    skill_path = package_skill if package_skill.exists() else ROOT / "skills" / "pcs-user-entry-compiler" / "SKILL.md"
+    skill_path = package_skill if package_skill.exists() else ROOT / "skills" / "pcs-skill" / "SKILL.md"
     if not skill_path.exists():
         print("Missing candidate skill or packaged SKILL.md")
         return 1

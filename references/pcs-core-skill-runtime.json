@@ -188,7 +188,7 @@
       "notes": "Natural-language entry adapter; delegates final assembly to Prompt Compiler."
     },
     {
-      "path": "skills/pcs-user-entry-compiler/SKILL.md",
+      "path": "skills/pcs-skill/SKILL.md",
       "role": "user_entry_skill",
       "included": true,
       "notes": "Candidate Skill for natural-language PCS entry."
@@ -244,7 +244,7 @@
   ],
   "checksums": {
     "VERSION": "26523d06ddb20f6df1c11d1c4fbacdff5ed1106e6ff619d8711c7cff8e8540c5",
-    "PROJECT_STATUS.md": "8f4b4baa56c45f65e3716d3304ce647541d97dc99aa279ba371b7166b9f550d7",
+    "PROJECT_STATUS.md": "b29ddc86249d6cc1d79722c32f37fee62f9cf8b51e1d648cec8e18c41cd29012",
     "00_PCS_Index.md": "67be510a1a1958371d31e51ab70cb2601c2e8cf2cf45d4825450dec84bdf1497",
     "99_SCHEMAS/PCS_Version_Metadata.json": "c4c8882d8b89a595a3b2d7f2f31e77b3fadf9a653b96412d1b628a5d3f9bc61c",
     "99_SCHEMAS/PCS_Release_Status.json": "ac67c0b3c84efca5b82e03de0d324f3a0f7b8bde0d9abee063c5a6e7ab907a7b",
@@ -255,7 +255,7 @@
     "99_SCHEMAS/PCS_Output_Compile_Result_Schema.json": "7d6157d1bbd5ef73991d1bbfb05a2eab1e2748db0d2738dc295418c92a3b90db",
     "99_SCHEMAS/PCS_Core_Export_Package_Schema.json": "2e34cf9030338ee28cf2809545d5338e5a62d93fc1930bbcb13467af8a8dfb5f",
     "99_SCHEMAS/PCS_Core_Export_Profile_Config_Schema.json": "e81bfb74c2dae94167cd135c379166cafbf1f621c2abaca9d27608c767df2477",
-    "99_SCHEMAS/PCS_Core_Export_Profile_Config.json": "563fb42408e8afa2334cb60d5cc470f0b1621f959e95dfb88c67ac5da4ea0b4b",
+    "99_SCHEMAS/PCS_Core_Export_Profile_Config.json": "d040b032c6879218bbc812e5e45f31a58676674dbee1a6302dbf8f99db71d5ba",
     "07_OUTPUT_TEMPLATE/Output_Compile_Rules.json": "8f51fa14133187b625c29c47911e016557a52ca1a1fa1d115018e5d37624068b",
     "07_OUTPUT_TEMPLATE/Field_Phrase_Mapping.json": "1c464f0409ad1976dfc5eddd1702863664febf0f4df7421ffa8251486616e6be",
     "07_OUTPUT_TEMPLATE/Prompt_Fragment_Library.json": "f0077fe44a03e8d1b3981dfd3c4ecdfcc2c126a9fdf8f9e2dea71212a18d9dd9",
@@ -269,7 +269,7 @@
     "99_SCHEMAS/PCS_User_Entry_Compile_Request_Schema.json": "622dbee808a9ae2034c4747671e8896f2bec63b0318b620f7f9cc4b808a559d2",
     "99_SCHEMAS/PCS_User_Entry_Compile_Result_Schema.json": "c55e03a9817fc881a8b0abfeabc97fe8f628a820267c1799cbf60594fe980b9c",
     "tools/pcs_user_entry_compile.py": "f3375a2cea20ae577957efc15f58fcf2a389aba8b653b8620c15eb93a70f4aac",
-    "skills/pcs-user-entry-compiler/SKILL.md": "90ef18bfa1bf9a9e40346cd988ddaca3b9cfb9fca3a52122cdec72d4d20e4269",
+    "skills/pcs-skill/SKILL.md": "b5d7cdd9fbfd7e7b9f60ddf65e07facb794f3d650204ca11544a8200321d4b52",
     "09_TEST_CASES/07_COMPILER_TESTS/product_integration_focused_ads.input.json": "9bc2d81dc2861d93be606d3f95110ae1bad634a73e1551a0b70221665b876a58",
     "09_TEST_CASES/07_COMPILER_TESTS/product_integration_focused_ads.result.json": "fd9cb0ab52a02e6e51cd6d2916a313f23dddf45ea94e176b7f0f35f5acb9317c",
     "09_TEST_CASES/07_COMPILER_TESTS/subject_transfer_flux.input.json": "844eb55d7afb8e960ddfc5859d15790aca9271641ae9f703ac55fae55b1e88aa",
@@ -1164,7 +1164,7 @@
         "additionalProperties": false
       },
       "compiler_module": "tools/pcs_user_entry_compile.py",
-      "candidate_skill": "skills/pcs-user-entry-compiler/SKILL.md",
+      "candidate_skill": "skills/pcs-skill/SKILL.md",
       "boundary": "The entry adapter maps natural language to existing PCS fields and delegates prompt assembly to the canonical Prompt Compiler."
     }
   },
@@ -9143,7 +9143,7 @@
     "boundary": "The Skill reads this one generated package at runtime. PCS Core files and directory layout are not copied into the Skill.",
     "skill_release_artifacts": [
       {
-        "source": "skills/pcs-user-entry-compiler/SKILL.md",
+        "source": "skills/pcs-skill/SKILL.md",
         "destination": "SKILL.md"
       },
       {
