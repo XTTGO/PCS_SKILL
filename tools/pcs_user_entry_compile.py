@@ -99,6 +99,7 @@ def extract_subject(text: str, task_type: str) -> str:
     return first_match(
         text,
         (
+            r"(?:生成|创建|制作)(?:一张|一幅|一帧)?(?:的)?(.+?)(?=(?:穿过|走过|在|于|进入|置于)|[，。,.]|$)",
             r"\bof\s+(?:a|an|the)\s+(.+?)(?=\s+(?:walking|standing|drifting|running|sitting|floating|in|through|on|at|with)\b|[,.;]|$)",
             r"^\s*(?:create|generate|make)\s+(?:a|an|the)\s+(.+?)(?=\s+(?:in|through|on|at|with)\b|[,.;]|$)",
         ),
@@ -112,7 +113,10 @@ def extract_context(text: str, task_type: str) -> str:
         return first_match(text, (r"\b(?:to|into|in)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",))
     return first_match(
         text,
-        (r"\b(?:in|through|on|at)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",),
+        (
+            r"(?:穿过|走过|在|于|进入|置于)(.+?)(?=(?:的)?(?:电影感|电影风格|电影般|画面|场景)|[，。,.]|$)",
+            r"\b(?:in|through|on|at)\s+(?:a|an|the)\s+(.+?)(?=[,.]|$)",
+        ),
     )
 
 
@@ -144,13 +148,13 @@ def extract_common_fields(text: str, task_type: str) -> dict[str, dict[str, Any]
     accent = first_match(text, (r"\b(deep blue(?:\s+accent(?:\s+color)?)?)\b",))
     if accent:
         add("D2_accent_colors", accent, "P2")
-    if re.search(r"\b(cinema(?:tic)?|cinematic)\b", text, flags=re.IGNORECASE):
+    if re.search(r"\b(cinema(?:tic)?|cinematic)\b|电影感|电影风格|电影般", text, flags=re.IGNORECASE):
         add("H1_rendering_style", "cinematic", "P2")
     if re.search(r"\bluxury\b", text, flags=re.IGNORECASE):
         add("E6_aesthetic_reference", "luxury product advertising", "P3")
     if re.search(r"\bquiet\b", text, flags=re.IGNORECASE):
         add("K1_emotional_tone", "quiet", "P2")
-    if re.search(r"\bdawn\b", text, flags=re.IGNORECASE):
+    if re.search(r"\bdawn\b|清晨|黎明", text, flags=re.IGNORECASE):
         add("I1_time_of_day", "dawn", "P2")
     return fields
 
